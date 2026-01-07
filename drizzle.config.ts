@@ -4,7 +4,7 @@ if (!process.env.DATABASE_URL) {
   throw new Error("DATABASE_URL is not set in the .env file");
 }
 export default defineConfig({
-  schema: "./src/schema.ts", // Your schema file path
+  schema: "./drizzle/schema.ts", // Your schema file path
   out: "./drizzle", // Your migrations folder
   dialect: "postgresql",
   dbCredentials: {

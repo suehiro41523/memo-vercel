@@ -1,6 +1,6 @@
 {
-  "id": "00000000-0000-0000-0000-000000000000",
-  "prevId": "",
+  "id": "1f65b700-7f1d-4b95-a18c-41456b410ec6",
+  "prevId": "1f024a5b-7494-41c0-9222-d36d813eaede",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -16,13 +16,13 @@
           "identity": {
             "type": "always",
             "name": "block_id_seq",
+            "schema": "public",
             "increment": "1",
+            "startWith": "1",
             "minValue": "1",
             "maxValue": "2147483647",
-            "startWith": "1",
             "cache": "1",
-            "cycle": false,
-            "schema": "public"
+            "cycle": false
           }
         },
         "block_type": {
@@ -32,12 +32,6 @@
           "notNull": false,
           "default": 1
         },
-        "children": {
-          "name": "children",
-          "type": "integer[]",
-          "primaryKey": false,
-          "notNull": false
-        },
         "order": {
           "name": "order",
           "type": "integer",
@@ -46,7 +40,13 @@
         },
         "content": {
           "name": "content",
-          "type": "jsonb[]",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "parent": {
+          "name": "parent",
+          "type": "text",
           "primaryKey": false,
           "notNull": false
         }
@@ -55,8 +55,8 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
-      "checkConstraints": {},
       "policies": {},
+      "checkConstraints": {},
       "isRLSEnabled": false
     },
     "public.block_type": {
@@ -71,13 +71,13 @@
           "identity": {
             "type": "always",
             "name": "block_type_id_seq",
+            "schema": "public",
             "increment": "1",
+            "startWith": "1",
             "minValue": "1",
             "maxValue": "2147483647",
-            "startWith": "1",
             "cache": "1",
-            "cycle": false,
-            "schema": "public"
+            "cycle": false
           }
         },
         "block_type_id": {
@@ -98,8 +98,8 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
-      "checkConstraints": {},
       "policies": {},
+      "checkConstraints": {},
       "isRLSEnabled": false
     },
     "public.page": {
@@ -114,13 +114,13 @@
           "identity": {
             "type": "always",
             "name": "page_id_seq",
+            "schema": "public",
             "increment": "1",
+            "startWith": "1",
             "minValue": "1",
             "maxValue": "2147483647",
-            "startWith": "1",
             "cache": "1",
-            "cycle": false,
-            "schema": "public"
+            "cycle": false
           }
         },
         "page_id": {
@@ -158,8 +158,8 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
-      "checkConstraints": {},
       "policies": {},
+      "checkConstraints": {},
       "isRLSEnabled": false
     }
   },
@@ -170,26 +170,8 @@
   "policies": {},
   "views": {},
   "_meta": {
+    "columns": {},
     "schemas": {},
-    "tables": {},
-    "columns": {}
-  },
-  "internal": {
-    "tables": {
-      "block": {
-        "columns": {
-          "children": {
-            "isArray": true,
-            "dimensions": 1,
-            "rawType": "integer"
-          },
-          "content": {
-            "isArray": true,
-            "dimensions": 1,
-            "rawType": "jsonb"
-          }
-        }
-      }
-    }
+    "tables": {}
   }
 }

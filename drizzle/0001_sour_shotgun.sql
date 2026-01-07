@@ -1,0 +1,1 @@
+ALTER TABLE "block" ALTER COLUMN "content" SET DATA TYPE jsonb;
