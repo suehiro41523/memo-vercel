@@ -9,10 +9,11 @@ import {
   useMutation,
   useQuery,
 } from "@tanstack/react-query";
-import { FocusEventHandler, FormEvent } from "react";
+import { FormEvent, FormEventHandler, useEffect, useRef } from "react";
 
 export default function ContentWrapper() {
   const queryClient = new QueryClient();
+  const blocksRef = useRef<(HTMLDivElement | null)[]>([]);
 
   // 返り値がないのでmutation
   const create = useMutation({
@@ -70,25 +71,36 @@ export default function ContentWrapper() {
     e.currentTarget.reset();
   };
 
-  const onChangeDebounceFn = debounce(
-    async (e: React.ChangeEvent<HTMLInputElement>) => {
-      if (!e.target.value) return;
-      const form = e.target;
+  const onInputDebounceFn = debounce(
+    async (e: EventTarget & HTMLDivElement) => {
+      if (!e) return;
+      const form = e;
 
       update.mutateAsync({
         id: Number(form.id),
         blockType: BLOCK_TYPE.TEXT,
         parent: "",
         order: 1000,
-        content: { content: form.value },
+        content: { content: form.innerText },
       });
+
       await blocks.refetch();
     },
     1200
   );
-  const onChange: FocusEventHandler<HTMLInputElement> = async (e) => {
-    onChangeDebounceFn(e);
+
+  const onInput = async (e: FormEvent<HTMLDivElement>) => {
+    onInputDebounceFn(e.currentTarget);
   };
+
+  useEffect(() => {
+    if (blocksRef.current) {
+      blocksRef.current.map(
+        (block, i) =>
+          (block!.innerText = blocks.data![i].content?.content || "")
+      );
+    }
+  }, [blocks.data]);
 
   if (blocks.isLoading) return <div>Loading...</div>;
   if (blocks.error) return <div>Error</div>;
@@ -98,18 +110,21 @@ export default function ContentWrapper() {
         <input type="text" placeholder="write a comment" name="comment" />
         <button type="submit">Submit</button>
       </form>
-      <div className="flex flex-col gap-2">
-        {blocks.data?.map((block) => {
+      <div className="flex flex-col w-full gap-2">
+        {blocks.data?.map((block, index) => {
           // ブロックの種類に応じて表示を分別する
           if (block.blockType === BLOCK_TYPE.TEXT) {
             return (
-              <input
-                className="w-full outline-none focus:ouline-none"
+              <div
+                ref={(el) => {
+                  blocksRef.current[index] = el;
+                }}
+                className="w-full outline-none focus:ouline-none text-wrap"
+                contentEditable="true"
                 key={block.id}
                 id={String(block.id)}
-                defaultValue={block.content?.content}
-                onChange={onChange}
-              />
+                onInput={onInput}
+              ></div>
             );
           }
         })}
